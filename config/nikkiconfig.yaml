@@ -114,17 +114,30 @@ proxy-groups:
   - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🤖 ChatGPT, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, 🔯 Ikuun-美国故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 📲 Telegram, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🎥 NETFLIX, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 💶 PayPal, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🔯 香港故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: 🔯 台湾故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: 🔯 日本故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: 🔯 新加坡故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
-  - {name: 🔯 美国故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  # Amy 地区故障转移
+  - {name: 🔯 Amy-香港故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: 🔯 Amy-台湾故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: 🔯 Amy-日本故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: 🔯 Amy-新加坡故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: 🔯 Amy-美国故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  # Ikuun 地区故障转移
+  - {name: 🔯 Ikuun-香港故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: 🔯 Ikuun-台湾故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: 🔯 Ikuun-日本故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: 🔯 Ikuun-新加坡故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: 🔯 Ikuun-美国故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  # 全局地区故障转移
+  - {name: 🔯 香港故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: 🔯 台湾故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: 🔯 日本故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: 🔯 新加坡故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: 🔯 美国故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
 
 # 规则匹配
 rules:
