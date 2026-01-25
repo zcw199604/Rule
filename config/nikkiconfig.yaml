@@ -107,19 +107,19 @@ proxy-groups:
   - {name: 🌐 全部节点, type: select, include-all: true}
   - {name: ✈️ Amy 节点, type: select, use: [Amy]}
   - {name: ✈️ Ikuun 节点, type: select, use: [Ikuun]}
-  - {name: 🔯 全局故转, type: fallback, proxies: [🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转], interval: 300}
-  - {name: 🚀 默认代理, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🐟 漏网之鱼, type: select, proxies: [直连,🚀 默认代理, 🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转]}
-  - {name: 📹 YouTube, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 美国故转, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 直连]}
-  - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 🤖 ChatGPT, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 📲 Telegram, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 🎥 NETFLIX, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 香港故转, 🔯 台湾故转, 🔯 日本故转, 🔯 新加坡故转, 🔯 美国故转, 直连]}
-  - {name: 💶 PayPal, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy 节点, ✈️ Ikuun 节点, 🔯 日本故转, 🔯 新加坡故转, 🔯 香港故转, 🔯 台湾故转, 🔯 美国故转, 直连]}
+  - {name: 🔯 全局故转, type: fallback, proxies: [🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转], interval: 300}
+  - {name: 🚀 默认代理, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [直连,🚀 默认代理, 🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点]}
+  - {name: 📹 YouTube, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🤖 ChatGPT, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 📲 Telegram, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🎥 NETFLIX, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 💶 PayPal, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🔯 香港故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: 🔯 台湾故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
   - {name: 🔯 日本故转, type: fallback, include-all: true, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
