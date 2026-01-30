@@ -12,6 +12,8 @@ proxy-providers:
       enable: true
       url: https://www.gstatic.com/generate_204
       interval: 300
+      timeout: 10000
+      lazy: true
     proxy: 直连
   Ikuun:
     url: ""
@@ -21,6 +23,8 @@ proxy-providers:
       enable: true
       url: https://www.gstatic.com/generate_204
       interval: 300
+      timeout: 10000
+      lazy: true
     proxy: 直连
 
 # 节点信息
@@ -107,40 +111,33 @@ proxy-groups:
   - {name: 🌐 全部节点, type: select, include-all: true}
   - {name: ✈️ Amy 节点, type: select, use: [Amy]}
   - {name: ✈️ Ikuun 节点, type: select, use: [Ikuun]}
-  - {name: 🔯 全局故转, type: fallback, proxies: [🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转], interval: 300}
-  - {name: 🚀 默认代理, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🐟 漏网之鱼, type: select, proxies: [直连,🚀 默认代理, 🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点]}
-  - {name: 📹 YouTube, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🤖 ChatGPT, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, 🔯 Ikuun-美国故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 日本故转, 🔯 美国故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 📲 Telegram, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🎥 NETFLIX, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 💶 PayPal, type: select, proxies: [🔯 全局故转, 🌐 全部节点, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 台湾故转, 🔯 新加坡故转, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  # Amy 地区故障转移
-  - {name: 🔯 Amy-香港故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: 🔯 Amy-台湾故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: 🔯 Amy-日本故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: 🔯 Amy-新加坡故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
-  - {name: 🔯 Amy-美国故转, type: fallback, use: [Amy], interval: 300, lazy: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
-  # Ikuun 地区故障转移
-  - {name: 🔯 Ikuun-香港故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: 🔯 Ikuun-台湾故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: 🔯 Ikuun-日本故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: 🔯 Ikuun-新加坡故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
-  - {name: 🔯 Ikuun-美国故转, type: fallback, use: [Ikuun], interval: 300, lazy: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
-  # 全局地区故障转移
-  - {name: 🔯 香港故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: 🔯 台湾故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: 🔯 日本故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: 🔯 新加坡故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
-  - {name: 🔯 美国故转, type: fallback, include-all: true, interval: 300, lazy: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  - {name: ✈️ Amy-香港, type: select, use: [Amy], filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ✈️ Amy-日本, type: select, use: [Amy], filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: ✈️ Ikuun-香港, type: select, use: [Ikuun], filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ✈️ Ikuun-日本, type: select, use: [Ikuun], filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: ✈️ Amy-台湾, type: select, use: [Amy], filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: ✈️ Amy-新加坡, type: select, use: [Amy], filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: ✈️ Amy-美国, type: select, use: [Amy], filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  - {name: ✈️ Ikuun-台湾, type: select, use: [Ikuun], filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: ✈️ Ikuun-新加坡, type: select, use: [Ikuun], filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: ✈️ Ikuun-美国, type: select, use: [Ikuun], filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  - {name: 🔯 全局故转, type: fallback, proxies: [✈️ Amy-香港, ✈️ Amy-日本, ✈️ Ikuun-香港, ✈️ Ikuun-日本], interval: 300}
+  - {name: 🚀 默认代理, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [直连, 🚀 默认代理, 🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点]}
+  - {name: 📹 YouTube, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🤖 ChatGPT, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 📲 Telegram, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🎥 NETFLIX, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 💶 PayPal, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
 
 # 规则匹配
 rules:
+  - RULE-SET,myproxylite,🔯 全局故转
   - RULE-SET,private_ip,直连,no-resolve
   - RULE-SET,private_domain,直连
   - RULE-SET,pt,直连
@@ -177,6 +174,7 @@ rule-providers:
   private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
   pt: { <<: *class, url: "https://raw.githubusercontent.com/zcw199604/Rule/refs/heads/main/rule/pt.list"}
   proxylite: { <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/proxy.list"}
+  myproxylite: { <<: *class, url: "https://raw.githubusercontent.com/zcw199604/Rule/refs/heads/main/rule/myproxylite.list"}
   ai: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs" }
   youtube_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
   google_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
