@@ -103,36 +103,40 @@ dns:
     - https://8.8.8.8/dns-query#RULES&ecs=223.5.5.0/24
   fake-ip-filter:
     - "rule-set:fakeipfilter_domain"
+  nameserver-policy:
+    "geosite:cn,private":
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
 
 # 出站策略，根据自己情况调整每个策略里分组排序，增删都可以，比如把美国自动放到第一个，比如删除香港故转，注意别漏掉表情逗号等。
 # 如果相应分组没有筛选到对应的国家，请根据自己节点名字调整筛选关键字。
 # 没有再使用锚点，是考虑很多新手修改难度，这样新手修改某个分组更容易些。
 proxy-groups:
   - {name: 🌐 全部节点, type: select, include-all: true}
+  - {name: 🚀 默认代理, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🔯 全局故转, type: fallback, proxies: [✈️ Amy-美国,✈️ Ikuun-美国,✈️ Amy-香港, ✈️ Ikuun-香港, ✈️ Amy-日本, ✈️ Ikuun-日本], interval: 300}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [直连, 🚀 默认代理, 🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点]}
   - {name: ✈️ Amy 节点, type: select, use: [Amy]}
-  - {name: ✈️ Ikuun 节点, type: select, use: [Ikuun]}
   - {name: ✈️ Amy-香港, type: select, use: [Amy], filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: ✈️ Amy-日本, type: select, use: [Amy], filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: ✈️ Ikuun-香港, type: select, use: [Ikuun], filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: ✈️ Ikuun-日本, type: select, use: [Ikuun], filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
   - {name: ✈️ Amy-台湾, type: select, use: [Amy], filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
   - {name: ✈️ Amy-新加坡, type: select, use: [Amy], filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
   - {name: ✈️ Amy-美国, type: select, use: [Amy], filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  - {name: ✈️ Ikuun 节点, type: select, use: [Ikuun]}
+  - {name: ✈️ Ikuun-香港, type: select, use: [Ikuun], filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ✈️ Ikuun-日本, type: select, use: [Ikuun], filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
   - {name: ✈️ Ikuun-台湾, type: select, use: [Ikuun], filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
   - {name: ✈️ Ikuun-新加坡, type: select, use: [Ikuun], filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
   - {name: ✈️ Ikuun-美国, type: select, use: [Ikuun], filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
-  - {name: 🔯 全局故转, type: fallback, proxies: [✈️ Amy-香港, ✈️ Amy-日本, ✈️ Ikuun-香港, ✈️ Ikuun-日本], interval: 300}
-  - {name: 🚀 默认代理, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🐟 漏网之鱼, type: select, proxies: [直连, 🚀 默认代理, 🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点]}
-  - {name: 📹 YouTube, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🤖 ChatGPT, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 👨🏿‍💻 GitHub, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
-  - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🍀 Google, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 📹 YouTube, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 📲 Telegram, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 🎥 NETFLIX, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🎵 TikTok, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🪟 Microsoft, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
+  - {name: 🐬 OneDrive, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
   - {name: 💶 PayPal, type: select, proxies: [🔯 全局故转, 🌐 全部节点, ✈️ Amy-香港, ✈️ Amy-日本, ✈️ Amy-台湾, ✈️ Amy-新加坡, ✈️ Amy-美国, ✈️ Ikuun-香港, ✈️ Ikuun-日本, ✈️ Ikuun-台湾, ✈️ Ikuun-新加坡, ✈️ Ikuun-美国, ✈️ Amy 节点, ✈️ Ikuun 节点, 直连]}
 
 # 规则匹配
