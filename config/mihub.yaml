@@ -1,0 +1,172 @@
+# DNS防泄露版本
+# 必读！！！
+# 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
+# 跑裸核用户请自行去掉下方控制面板模块的注释。
+# MiSub 远端 Clash/Mihomo YAML 模板，MiSub 输出时会注入订阅节点。
+# MiSub injects profile nodes into this list.
+proxies: []
+# 全局配置
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+log-level: warning
+global-client-fingerprint: chrome
+keep-alive-idle: 600
+keep-alive-interval: 15
+profile:
+  store-selected: true
+  store-fake-ip: true
+# 为防止使用插件朋友遇到面板问题，我注释掉了此模块。
+#external-controller: 0.0.0.0:9090
+#secret: ""
+#external-ui: ui
+#external-ui-name: zashboard
+#external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+
+# 嗅探（fakeip下其实可以不用嗅探）
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+    - "+.push.apple.com"
+# 入站
+tun:
+  enable: true
+  # system/gvisor/mixed
+  stack: mixed
+  dns-hijack: ["any:53", "tcp://any:53"]
+  #使用nikki，混入全部不修改的情况，开启接口指定为nikki
+  #device: nikki
+  #使用仅内核自行修改下面三项为true
+  auto-route: false
+  auto-redirect: false
+  auto-detect-interface: false
+# DNS模块
+dns:
+  enable: true
+  cache-algorithm: arc
+  listen: 0.0.0.0:1053
+  ipv6: false
+  enhanced-mode: redir-host # 想用 fake-ip 见下方说明
+  fake-ip-range: 28.0.0.1/8
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - rule-set:fakeipfilter_domain,private_domain
+  respect-rules: true
+  # 解析代理节点域名用，必须是国内 DNS
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  # 国内和私有域名交给国内 DNS
+  nameserver-policy:
+    "rule-set:private_domain,cn_domain,apple_domain":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+  # 其余域名用境外 DoH。因为 respect-rules， gle 或 🚀 默认代理）
+  nameserver:
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
+# 出站策略，根据自己情况调整每个策略里分组排序，增删都可以，比如把美国自动放到第一个，比如删除香港故转，注意别漏掉表情逗号等。
+# 如果相应分组没有筛选到对应的国家，请根据自己节点名字调整筛选关键字。
+# 没有再使用锚点，是考虑很多新手修改难度，这样新手修改某个分组更容易些。
+proxy-groups:
+  - {name: "\U0001F310 全部节点", type: select, include-all: true}
+  - {name: "\U0001F680 默认代理", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F52F 全局故转", type: fallback, proxies: [✈️ 香港节点, ✈️ 美国节点, ✈️ 日本节点, ✈️ 所有节点], interval: 300}
+  - {name: "\U0001F41F 漏网之鱼", type: select, proxies: [DIRECT, "\U0001F680 默认代理", "\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点]}
+  - {name: ✈️ 所有节点, type: select, include-all: true}
+  - {name: ✈️ 香港节点, type: select, include-all: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ✈️ 日本节点, type: select, include-all: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: ✈️ 台湾节点, type: select, include-all: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: ✈️ 新加坡节点, type: select, include-all: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: ✈️ 美国节点, type: select, include-all: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  - {name: "\U0001F916 AI 服务", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F468\U0001F3FF‍\U0001F4BB GitHub", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F340 Google", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F4F9 YouTube", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F4F2 Telegram", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F3A5 NETFLIX", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F3B5 TikTok", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001FA9F Microsoft", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F42C OneDrive", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  - {name: "\U0001F4B6 PayPal", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+# 规则匹配
+rules:
+  - "DOMAIN-SUFFIX,withpersona.com,\U0001F916 AI 服务"
+  - "RULE-SET,category-ai-chat-!cn,\U0001F916 AI 服务"
+  - "RULE-SET,openai,\U0001F916 AI 服务"
+  - "RULE-SET,anthropic,\U0001F916 AI 服务"
+  - "RULE-SET,ai,\U0001F916 AI 服务"
+  - "RULE-SET,myproxylite,\U0001F52F 全局故转"
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,private_domain,DIRECT
+  - RULE-SET,pt,DIRECT
+  - "DOMAIN-SUFFIX,qichiyu.com,\U0001F680 默认代理"
+  - "RULE-SET,proxylite,\U0001F680 默认代理"
+  - "RULE-SET,github_domain,\U0001F468\U0001F3FF‍\U0001F4BB GitHub"
+  - "RULE-SET,youtube_domain,\U0001F4F9 YouTube"
+  - "RULE-SET,google_domain,\U0001F340 Google"
+  - "RULE-SET,onedrive_domain,\U0001F42C OneDrive"
+  - "RULE-SET,microsoft_domain,\U0001FA9F Microsoft"
+  - RULE-SET,apple_domain,DIRECT
+  - "RULE-SET,tiktok_domain,\U0001F3B5 TikTok"
+  - "RULE-SET,telegram_domain,\U0001F4F2 Telegram"
+  - "RULE-SET,netflix_domain,\U0001F3A5 NETFLIX"
+  - "RULE-SET,paypal_domain,\U0001F4B6 PayPal"
+  - RULE-SET,apple_ip,DIRECT,no-resolve
+  - "RULE-SET,google_ip,\U0001F340 Google,no-resolve"
+  - "RULE-SET,netflix_ip,\U0001F3A5 NETFLIX,no-resolve"
+  - "RULE-SET,telegram_ip,\U0001F4F2 Telegram,no-resolve"
+  - "RULE-SET,geolocation-!cn,\U0001F680 默认代理"
+  - RULE-SET,cn_domain,DIRECT
+  - RULE-SET,cn_ip,DIRECT
+  - "MATCH,\U0001F41F 漏网之鱼"
+# 规则集
+## type：可选http/file/inline  behavior：可选domain/ipcidr/classical format：可选yaml/text/mrs
+rule-anchor:
+  ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: mrs, proxy: "\U0001F52F 全局故转"}
+  domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs, proxy: "\U0001F52F 全局故转"}
+  class: &class {type: http, interval: 86400, behavior: classical, format: text, proxy: "\U0001F52F 全局故转"}
+rule-providers:
+  fakeipfilter_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs"}
+  private_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
+  pt: {!!merge <<: *class, url: "https://raw.githubusercontent.com/zcw199604/Rule/refs/heads/main/rule/pt.list"}
+  proxylite: {!!merge <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/proxy.list"}
+  myproxylite: {!!merge <<: *class, url: "https://raw.githubusercontent.com/zcw199604/Rule/refs/heads/main/rule/myproxylite.list"}
+  category-ai-chat-!cn: {!!merge <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-chat-!cn.mrs"}
+  openai: {!!merge <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/openai.mrs"}
+  anthropic: {!!merge <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/anthropic.mrs"}
+  ai: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"}
+  youtube_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  google_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  github_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
+  telegram_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
+  netflix_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
+  paypal_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"}
+  onedrive_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"}
+  microsoft_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  apple_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
+  speedtest_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"}
+  tiktok_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
+  geolocation-!cn: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
+  cn_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  private_ip: {!!merge <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
+  cn_ip: {!!merge <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  google_ip: {!!merge <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  telegram_ip: {!!merge <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  netflix_ip: {!!merge <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+  apple_ip: {!!merge <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"}
