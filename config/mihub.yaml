@@ -89,18 +89,18 @@ dns:
 # 如果相应分组没有筛选到对应的国家，请根据自己节点名字调整筛选关键字。
 # 没有再使用锚点，是考虑很多新手修改难度，这样新手修改某个分组更容易些。
 proxy-groups:
-  - {name: "\U0001F310 全部节点", type: select, include-all: true}
+  - {name: "\U0001F310 全部节点", type: select, include-all: true, exclude-filter: &exclude-ai-exits "^AI链式出站 - |AI静态住宅出口"}
   - {name: "\U0001F680 默认代理", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
   - {name: "\U0001F52F 全局故转", type: fallback, proxies: [✈️ 香港节点, ✈️ 美国节点, ✈️ 日本节点, ✈️ 所有节点], interval: 300}
   - {name: "\U0001F41F 漏网之鱼", type: select, proxies: [DIRECT, "\U0001F680 默认代理", "\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点]}
-  - {name: ✈️ 所有节点, type: select, include-all: true}
-  - {name: ✈️ 香港节点, type: select, include-all: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: ✈️ 日本节点, type: select, include-all: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: ✈️ 台湾节点, type: select, include-all: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: ✈️ 新加坡节点, type: select, include-all: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
-  - {name: ✈️ 美国节点, type: select, include-all: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
-  # 前置组由 MiSub 固化为原始节点；不要在客户端把住宅出口本身选作前置节点。
-  - {name: AI前置节点, type: select, include-all: true}
+  - {name: ✈️ 所有节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits}
+  - {name: ✈️ 香港节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ✈️ 日本节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: ✈️ 台湾节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: ✈️ 新加坡节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: ✈️ 美国节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  # 前置组通过普通分组选择节点，避免链式副本或住宅出口被用作前置。
+  - {name: AI前置节点, type: select, proxies: [✈️ 所有节点, ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点]}
   - {name: AI链式出站, type: select, include-all: true}
   - {name: AI住宅出口, type: select, include-all: true, filter: "^AI链式出站 - .*AI静态住宅出口.*$"}
   - {name: "\U0001F916 AI 服务", type: select, proxies: [AI住宅出口]}
@@ -154,7 +154,7 @@ rule-providers:
   fakeipfilter_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs"}
   private_domain: {!!merge <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
   pt: {!!merge <<: *class, url: "https://raw.githubusercontent.com/zcw199604/Rule/refs/heads/main/rule/pt.list"}
-  proxylite: {!!merge <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/proxy.list"}
+  proxylite: {!!merge <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/rules/proxy.list"}
   myproxylite: {!!merge <<: *class, url: "https://raw.githubusercontent.com/zcw199604/Rule/refs/heads/main/rule/myproxylite.list"}
   category-ai-chat-!cn: {!!merge <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-chat-!cn.mrs"}
   openai: {!!merge <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/openai.mrs"}
