@@ -2,14 +2,27 @@
 # 必读！！！
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # 跑裸核用户请自行去掉下方控制面板模块的注释。
-# MiSub 远端 Clash/Mihomo YAML 模板，MiSub 输出时会注入订阅节点。
-# MiSub injects profile nodes into this list.
-# 在 MiSub 中添加手动节点“AI静态住宅出口”，作为 AI 链路的固定落地节点。
+# Mihomo Constructor 模板，在管理界面绑定各供应商的订阅地址。
 proxies: []
-x-misub-chain-proxy:
-  entry-group: AI前置节点
-  landing-group: AI链式出站
-  clone-prefix: "AI链式出站 - "
+proxy-providers:
+  Ikuun:
+    <<: &subscription {type: http, interval: 86400, proxy: DIRECT, health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 300, timeout: 10000, lazy: true}}
+    url: ""
+  Cf:
+    <<: *subscription
+    url: ""
+  Dmit自建:
+    <<: *subscription
+    url: ""
+  Zgo自建:
+    <<: *subscription
+    url: ""
+  # 此订阅只包含住宅代理节点。
+  AI住宅出口:
+    <<: *subscription
+    url: ""
+    override:
+      dialer-proxy: AI前置节点
 # 全局配置
 mixed-port: 7890
 allow-lan: true
@@ -87,22 +100,23 @@ dns:
     - https://cloudflare-dns.com/dns-query
 # 出站策略，根据自己情况调整每个策略里分组排序，增删都可以，比如把美国自动放到第一个，比如删除香港故转，注意别漏掉表情逗号等。
 # 如果相应分组没有筛选到对应的国家，请根据自己节点名字调整筛选关键字。
-# 没有再使用锚点，是考虑很多新手修改难度，这样新手修改某个分组更容易些。
 proxy-groups:
-  - {name: "\U0001F310 全部节点", type: select, include-all: true, exclude-filter: &exclude-ai-exits "^AI链式出站 - |AI静态住宅出口"}
+  - {name: "\U0001F310 全部节点", type: select, use: &ordinary-providers [Ikuun, Cf, Dmit自建, Zgo自建]}
   - {name: "\U0001F680 默认代理", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
   - {name: "\U0001F52F 全局故转", type: fallback, proxies: [✈️ 香港节点, ✈️ 美国节点, ✈️ 日本节点, ✈️ 所有节点], interval: 300}
   - {name: "\U0001F41F 漏网之鱼", type: select, proxies: [DIRECT, "\U0001F680 默认代理", "\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点]}
-  - {name: ✈️ 所有节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits}
-  - {name: ✈️ 香港节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: ✈️ 日本节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
-  - {name: ✈️ 台湾节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: ✈️ 新加坡节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
-  - {name: ✈️ 美国节点, type: select, include-all: true, exclude-filter: *exclude-ai-exits, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
-  # 前置组通过普通分组选择节点，避免链式副本或住宅出口被用作前置。
-  - {name: AI前置节点, type: select, proxies: [✈️ 所有节点, ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点]}
-  - {name: AI链式出站, type: select, include-all: true}
-  - {name: AI住宅出口, type: select, include-all: true, filter: "^AI链式出站 - .*AI静态住宅出口.*$"}
+  - {name: ✈️ 所有节点, type: select, use: *ordinary-providers}
+  - {name: ✈️ 香港节点, type: select, use: *ordinary-providers, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ✈️ 日本节点, type: select, use: *ordinary-providers, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$"}
+  - {name: ✈️ 台湾节点, type: select, use: *ordinary-providers, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: ✈️ 新加坡节点, type: select, use: *ordinary-providers, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
+  - {name: ✈️ 美国节点, type: select, use: *ordinary-providers, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
+  - {name: ✈️ Ikuun 节点, type: select, use: [Ikuun]}
+  - {name: ✈️ Cf 节点, type: select, use: [Cf]}
+  - {name: ✈️ Dmit自建, type: select, use: [Dmit自建]}
+  - {name: ✈️ Zgo自建, type: select, use: [Zgo自建]}
+  - {name: AI前置节点, type: select, proxies: [✈️ 所有节点, ✈️ Ikuun 节点, ✈️ Cf 节点, ✈️ Dmit自建, ✈️ Zgo自建]}
+  - {name: AI住宅出口, type: select, use: [AI住宅出口]}
   - {name: "\U0001F916 AI 服务", type: select, proxies: [AI住宅出口]}
   - {name: "\U0001F468\U0001F3FF‍\U0001F4BB GitHub", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
   - {name: "\U0001F340 Google", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
