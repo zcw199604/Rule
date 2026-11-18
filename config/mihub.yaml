@@ -4,7 +4,12 @@
 # 跑裸核用户请自行去掉下方控制面板模块的注释。
 # MiSub 远端 Clash/Mihomo YAML 模板，MiSub 输出时会注入订阅节点。
 # MiSub injects profile nodes into this list.
+# 在 MiSub 中添加手动节点“AI静态住宅出口”，作为 AI 链路的固定落地节点。
 proxies: []
+x-misub-chain-proxy:
+  entry-group: AI前置节点
+  landing-group: AI链式出站
+  clone-prefix: "AI链式出站 - "
 # 全局配置
 mixed-port: 7890
 allow-lan: true
@@ -94,7 +99,11 @@ proxy-groups:
   - {name: ✈️ 台湾节点, type: select, include-all: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
   - {name: ✈️ 新加坡节点, type: select, include-all: true, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore))^((?!(台|日|韩|港|美)).)*$"}
   - {name: ✈️ 美国节点, type: select, include-all: true, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|韩|新|日)).)*$"}
-  - {name: "\U0001F916 AI 服务", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
+  # 前置组由 MiSub 固化为原始节点；不要在客户端把住宅出口本身选作前置节点。
+  - {name: AI前置节点, type: select, include-all: true}
+  - {name: AI链式出站, type: select, include-all: true}
+  - {name: AI住宅出口, type: select, include-all: true, filter: "^AI链式出站 - .*AI静态住宅出口.*$"}
+  - {name: "\U0001F916 AI 服务", type: select, proxies: [AI住宅出口]}
   - {name: "\U0001F468\U0001F3FF‍\U0001F4BB GitHub", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
   - {name: "\U0001F340 Google", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
   - {name: "\U0001F4F9 YouTube", type: select, proxies: ["\U0001F52F 全局故转", "\U0001F310 全部节点", ✈️ 香港节点, ✈️ 日本节点, ✈️ 台湾节点, ✈️ 新加坡节点, ✈️ 美国节点, ✈️ 所有节点, DIRECT]}
